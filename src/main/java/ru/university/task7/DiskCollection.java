@@ -6,6 +6,7 @@ public class DiskCollection {
     ArrayList<Disk> disks = new ArrayList<>();
     ArrayList<DiskType> types = new ArrayList<>();
     ArrayList<Category> categories = new ArrayList<>();
+    int nextDisk = 1;
     int nextType = 1;
     int nextCategory = 1;
 
@@ -128,5 +129,60 @@ public class DiskCollection {
             }
         }
         return null;
+    }
+
+    int addDisk(String name, String description, int typeId, ArrayList<Integer> cats) {
+        if (!validDisk(name, description, typeId, cats)) {
+            return -1;
+        }
+        disks.add(new Disk(nextDisk, name.trim(), description.trim(), typeId, cats));
+        return nextDisk++;
+    }
+
+    boolean editDisk(int id, String name, String description, int typeId, ArrayList<Integer> cats) {
+        Disk d = getDisk(id);
+        if (d == null || !validDisk(name, description, typeId, cats)) {
+            return false;
+        }
+        d.name = name.trim();
+        d.description = description.trim();
+        d.typeId = typeId;
+        d.cats = new ArrayList<>(cats);
+        return true;
+    }
+
+    boolean deleteDisk(int id) {
+        for (int i = 0; i < disks.size(); i++) {
+            if (disks.get(i).id == id) {
+                disks.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    Disk getDisk(int id) {
+        for (Disk d : disks) {
+            if (d.id == id) {
+                return d;
+            }
+        }
+        return null;
+    }
+
+    boolean validDisk(String name, String description, int typeId, ArrayList<Integer> cats) {
+        if (name == null || name.trim().isEmpty() || description == null ||
+                description.trim().isEmpty() || getType(typeId) == null ||
+                cats == null || cats.isEmpty()) {
+            return false;
+        }
+        ArrayList<Integer> used = new ArrayList<>();
+        for (Integer c : cats) {
+            if (c == null || getCategory(c) == null || used.contains(c)) {
+                return false;
+            }
+            used.add(c);
+        }
+        return true;
     }
 }

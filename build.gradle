@@ -2,6 +2,15 @@ plugins {
     id 'application'
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
 application {
     mainClass = 'ru.university.task7.Main'
     applicationDefaultJvmArgs = ['-Dstdout.encoding=UTF-8']
@@ -9,4 +18,8 @@ application {
 
 tasks.named('run', JavaExec) {
     standardInput = System.in
+}
+
+test {
+    useJUnitPlatform()
 }
